@@ -1,0 +1,1 @@
+ini content index dari tema default
