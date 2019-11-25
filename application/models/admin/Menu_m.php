@@ -92,7 +92,6 @@ class Menu_m extends CI_Model
     function addMenu($data)
     {
         $this->db->insert($this->table, $data);
-        return $this->hasil();
     }
     // add acces menu
     function addAccessMenu($data)
