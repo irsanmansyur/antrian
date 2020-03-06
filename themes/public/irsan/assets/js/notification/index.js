@@ -17,9 +17,7 @@ function playAudio(tambahan = 1000) {
 	});
 }
 let time = 1000;
-let waits = new Promise((res, rej) => {});
 async function panggil(nomor, loket) {
-	waits();
 	changeButton(loket);
 	audio.currentTime = 0;
 	audio.src = baseUrl + "assets/audio/new/in.wav";
@@ -58,11 +56,8 @@ async function panggil(nomor, loket) {
 	audio.src = baseUrl + "assets/audio/new/out.wav";
 	time = await playAudio();
 	changeButton(loket);
-	await postData(baseUrl + "home/setData", { id: nomor }).then(data => {
+	await postData(baseUrl + "api/Push/PlayFinish", { id: nomor }).then(data => {
 		console.log(data);
-	});
-	waits(res => {
-		res(true);
 	});
 }
 async function postData(url = "", data = {}) {
@@ -156,7 +151,6 @@ var channel = pusher.subscribe("my-channel");
 
 channel.bind("my-event", async function(data) {
 	if (data.message === "notif") {
-		await awaits();
 		load();
 	}
 });

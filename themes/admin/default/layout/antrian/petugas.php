@@ -27,7 +27,7 @@ $this->load->view($thema_load . 'element/template/head_meta.php');
           echo "<button class='btn btn-warning btn-lg process' data-toggle='modal' data-target='#open' type='button'><span class='fa fa-university'>&nbsp;</span>OPEN</button>";
         ?>
         <div class="container">
-          <a href="<?= base_url('admin/antrian/panggillagi/') . $s_antrian['id'] ?>" class="panggil btn btn-primary" id="panggil" data-urut="<?= @$s_antrian['id'] ?>" data-counter="<?= @$s_antrian['counter'] ?>"><?= @($s_antrian['type'] == 1) ? "Panggil" : "Panggil Ulang" ?></a>
+          <a href="<?= base_url('api/petugas/memanggil/') . $s_antrian['id'] ?>" class="panggil btn btn-primary" id="panggil" data-urut="<?= @$s_antrian['id'] ?>" data-counter="<?= @$s_antrian['counter'] ?>"><?= @($s_antrian['type'] == 1) ? "Panggil" : "Panggil Ulang" ?></a>
           <?php if ($antrian_next) : ?>
             <a href="<?= base_url("admin/antrian/lewati/" . @$s_antrian['id'] . "?counter=" . @$s_antrian['counter']) ?>" class="btn btn-danger">Lewati</a>
             <a href="<?= base_url("admin/antrian/selesai/" . @$s_antrian['id'] . "?counter=" . @$s_antrian['counter']) ?>" class="btn btn-success">Selesai</a>
@@ -131,6 +131,12 @@ $this->load->view($thema_load . 'element/template/head_meta.php');
       </div>
     </div>
   </div>
+  <script src="https://js.pusher.com/5.1/pusher.min.js"></script>
+  <script>
+    loadFileJs("assets/js/Config/index.js");
+  </script>
+
+
   <script>
     var status = 1;
     var content = '';

@@ -53,11 +53,24 @@
     <!--  Notifications Plugin    -->
     <script src="<?= $thema_folder ?>assets/js/plugins/bootstrap-notify.js"></script>
     <script src="<?= $thema_folder ?>assets/js/main.js"></script>
-    <?php
-    if (@$page['method'] == "edit") : ?>
-        <!-- summernote -->
-        <link rel="stylesheet" href="<?= $thema_folder; ?>assets/vendor/summernote/summernote-bs4.css">
-        <script src="<?= $thema_folder; ?>assets/vendor/summernote/summernote-bs4.min.js"></script>
-    <?php endif; ?>
+    <script>
+        const baseUrl = "<?= base_url() ?>";
+        const themeFolder = "<?= $thema_folder ?>";
+        const loadFileJs = (url, folder = null) => {
+            let elJs = document.createElement("script");
+            elJs.src = folder ? url : themeFolder + url;
+            document.querySelector("head").appendChild(elJs);
+            return true;
+        };
+
+        const addCss = (url, folder = null) => {
+            let link = document.createElement("link");
+            link.rel = "stylesheet";
+            link.type = "text/css";
+            link.href = folder ? url : themeFolder + url;
+            document.querySelector("head").appendChild(link);
+            return "Added";
+        };
+    </script>
 
 </head>

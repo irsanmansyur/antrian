@@ -112,6 +112,7 @@ class Antrian extends Admin_Controller
         ]);
         $pusher = $this->ci_pusher->get();
         $data['message'] = 'notif';
+        $data['playing'] = true;
         $pusher->trigger('my-channel', 'my-event', $data);
         redirect('admin/antrian/petugas');
     }
