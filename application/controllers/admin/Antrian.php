@@ -103,12 +103,16 @@ class Antrian extends Admin_Controller
 
     function panggillagi($id)
     {
+        $this->load->library("ci_pusher");
         $this->db->where([
             'id' => $id
         ]);
         $this->db->update("data_antrian", [
             'status' => 2
         ]);
+        $pusher = $this->ci_pusher->get();
+        $data['message'] = 'notif';
+        $pusher->trigger('my-channel', 'my-event', $data);
         redirect('admin/antrian/petugas');
     }
     function updateLoket()

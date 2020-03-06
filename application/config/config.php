@@ -23,8 +23,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://192.168.1.3:8080/antrian/';
-
+$urlInit = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") ? "https" : "http");
+$urlInit .= "://" . $_SERVER['HTTP_HOST'];
+$urlInit .= str_replace(basename($_SERVER['SCRIPT_NAME']), "", $_SERVER['SCRIPT_NAME']);
+$config['base_url'] = $urlInit;
 /*
 |--------------------------------------------------------------------------
 | Index File

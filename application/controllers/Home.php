@@ -35,7 +35,9 @@ class Home extends CI_Controller
 		// 2 = waiting                      2 = Buka/waiting
 		// 3 = wait/belum dipanggil
 		// 4 = pending 
-		$allLoket = $this->antrian_m->getAllLoked()->result();
+
+		//data semua loket
+		$allLoket = $this->antrian_m->getAllLoked();
 
 		// cek next
 		$next = $this->antrian_m->getNext()->row();
@@ -45,7 +47,8 @@ class Home extends CI_Controller
 
 
 		$content = array();
-		foreach ($allLoket as $row) {
+		foreach ($allLoket->result() as $row) {
+
 			$content[] = $this->antrian_m->getAntrianClient([
 				'counter' =>  $row->client,
 				'status !=' => 4,
@@ -56,16 +59,12 @@ class Home extends CI_Controller
 		$response = array(
 			'content' => $content,
 			'nextAntri' => $next,
-			'loket' => $allLoket,
-			'jmlLoket' => $this->antrian_m->getAllLoked()->num_rows()
+			'loket' => $allLoket->result(),
+			'jmlLoket' => $allLoket->num_rows()
 		);
+		header('Content-Type: application/json');
 		echo json_encode($response, JSON_PRETTY_PRINT);
-		// $this->output
-		// 	->set_status_header(200)
-		// 	->set_content_type('application/json', 'utf-8')
-		// 	->set_output(json_encode($response, JSON_PRETTY_PRINT))
-		// 	->_display();
-		// exit;
+		return json_encode($response);
 	}
 	function setData()
 	{
