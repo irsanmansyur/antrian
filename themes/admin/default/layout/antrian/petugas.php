@@ -14,46 +14,18 @@ $this->load->view($thema_load . 'element/template/head_meta.php');
   ?>
 
   <!-- isi content -->
-  <div class="row loket">
-    <div class="col-sm-6 offset-sm-3 text-center">
-      <div class="antrian-active" data-active="<?= @$row['type'] ?>" style="padding-top:20px;padding-bottom:20px;">
-        <h1>Loket <?= $s_loket['client'] ?></h1>
-
-        <?php if ($s_loket['status'] == 1)
-          echo "<button class='btn btn-primary btn-lg tutup'  data-toggle='modal' data-target='#open' type='button'><span class='fa fa-university'>&nbsp;</span> Antrian {$s_antrian['id']}</button>";
-        elseif ($s_loket['status'] == 0)
-          echo "<button class='btn btn-light buka'  data-toggle='modal' data-target='#open' btn-lg buka' type='button'><span class='fa fa-university'>&nbsp;</span> TUTUP</button>";
-        else
-          echo "<button class='btn btn-warning btn-lg process' data-toggle='modal' data-target='#open' type='button'><span class='fa fa-university'>&nbsp;</span>OPEN</button>";
-        ?>
-        <div class="container">
-          <a href="<?= base_url('api/petugas/memanggil/') . $s_antrian['id'] ?>" class="panggil btn btn-primary" id="panggil" data-urut="<?= @$s_antrian['id'] ?>" data-counter="<?= @$s_antrian['counter'] ?>"><?= @($s_antrian['type'] == 1) ? "Panggil" : "Panggil Ulang" ?></a>
-          <?php if ($antrian_next) : ?>
-            <a href="<?= base_url("admin/antrian/lewati/" . @$s_antrian['id'] . "?counter=" . @$s_antrian['counter']) ?>" class="btn btn-danger">Lewati</a>
-            <a href="<?= base_url("admin/antrian/selesai/" . @$s_antrian['id'] . "?counter=" . @$s_antrian['counter']) ?>" class="btn btn-success">Selesai</a>
-          <?php else : ?>
-            <!-- <a href="<?= base_url("admin/antrian/selesai/" . @$s_antrian['id'] . "?counter=" . @$s_antrian['counter']) ?>" class="btn btn-success">Selesai</a> -->
-          <?php endif; ?>
-        </div>
+  <div id="loket-page">
+    <div class="row loket">
+      <div class="col-sm-6 offset-sm-3 text-center">
+        <loket-component v-bind:loket="data.loket" v-bind:next="data.nextAntri"></loket-component>
       </div>
     </div>
-  </div>
-  <hr />
-  <div class="row">
-    <div class="col-md text-center">
-      <div class="1 jumbotron" style="padding-top:20px;padding-bottom:20px;">
-        <?php if ($antrian_next) : ?>
-          <h1><span>Siap siap </span> <?= $antrian_next['id'] ?></h1><button class="btn btn-light btn-lg" type="button"><span class="fa fa-university">&nbsp;</span>Di LOKET .?</button>
-          <div class="container">
-            <a href="<?= base_url("admin/antrian/selesai/" . $antrian_next['id']) ?>?>" class="btn btn-warning">Waiting..!</a>
-          </div>
-        <?php else : ?>
-          <h1><span>Sudah tidak ada Antrian </span> <?= $antrian_next['id'] ?></h1><button class="btn btn-light btn-lg" type="button"><span class="fa fa-university">&nbsp;</span>Kosong.!</button>
-        <?php endif; ?>
-      </div>
+    <hr />
+    <div class="row">
+      <next-component v-bind:selanjutnya="data.nextAntri"></next-component>
     </div>
-
   </div>
+
   <div class="row">
     <div class="col-md-12">
       <a href="" data-url="<?= base_url("admin/antrian/admin") ?>" data-toggle="modal" id="tambah" data-target="#addAntrian" class="btn col-md-12 btn-success">Tambah Antry</a>
@@ -103,6 +75,14 @@ $this->load->view($thema_load . 'element/template/head_meta.php');
       </div>
     </div>
   </div>
+  <script>
+    const idLoket = "<?= $id ?>";
+
+    loadFileJs("src/components/loket/index.js");
+    loadFileJs("src/components/next/index.js");
+
+    loadFileJs("src/pages/loket/index.js");
+  </script>
 
   <?php
   $this->load->view($thema_load . 'element/template/footer.php');
@@ -131,52 +111,6 @@ $this->load->view($thema_load . 'element/template/head_meta.php');
       </div>
     </div>
   </div>
-  <script src="https://js.pusher.com/5.1/pusher.min.js"></script>
-  <script>
-    loadFileJs("assets/js/Config/index.js");
-  </script>
-
-
-  <script>
-    var status = 1;
-    var content = '';
-    $("button.tutup").click(() => {
-      status = 0;
-      $("span#contentku").html("TUTUP");
-    });
-    $("button.buka").click(() => {
-      status = 2;
-      $("span#contentku").html("BUKA");
-    });
-    $("button.process").click(() => {
-      status = 1;
-      content = "<?= $s_antrian['id'] ?>";
-      $("span#contentku").html(content);
-    });
-
-    $("#open").on('shown', function() {
-      $("span#contentku").html(content)
-    });
-    $('.next_queue').click(function() {
-      $.ajax({
-        type: "POST",
-        data: {
-          "id": "<?= $s_antrian['id'] ?>",
-          "client": "<?= $s_loket['client'] ?>",
-          "status": status
-        },
-        dataType: "json",
-        url: "<?= base_url('admin/antrian/updateLoket') ?>", //request
-        success: function(data) {
-          $(".preloader").fadeIn();
-          location.reload();
-        }
-      });
-      return false;
-
-    })
-  </script>
-
 
 </body>
 

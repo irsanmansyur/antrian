@@ -1,4 +1,17 @@
 <head>
+    <!-- css vue , component dan animate -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/animate.css@3.5.1" rel="stylesheet" />
+
+    <!-- pusher js -->
+    <script src="https://js.pusher.com/5.1/pusher.min.js"></script>
+
+    <!-- vue component dan Vue -->
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+
     <meta charset="utf-8" />
     <link rel="apple-touch-icon" sizes="76x76" href="<?= $thema_folder; ?>assets/img/apple-icon.png">
     <link rel="icon" type="image/png" href="<?= $thema_folder; ?>assets/img/favicon.png">
@@ -38,9 +51,7 @@
     <!-- CSS Files -->
     <link href="<?= $thema_folder; ?>assets/css/material-dashboard.min.css" rel="stylesheet" />
 
-    <!-- font -->
-    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
-    <link href="<?= $thema_folder; ?>assets/vendor/materialicon/material-icons.css" rel="stylesheet" />
+
     <link href="<?= $thema_folder; ?>assets/vendor/fontawesome/css/all.min.css" rel="stylesheet" />
     <link href="<?= $thema_folder; ?>assets/css/style.css" rel="stylesheet" />
     <link href="<?= $thema_folder; ?>assets/css/profile/profile.css" rel="stylesheet" />
@@ -71,6 +82,48 @@
             document.querySelector("head").appendChild(link);
             return "Added";
         };
+
+        function getData(url, {
+            method,
+            data,
+            ...option
+        } = {
+            method: "GET"
+        }) {
+            let form = null;
+            if (method == "POST") {
+                form = new FormData();
+                for (var i in data) {
+                    form.append(i, data[i]);
+                }
+            }
+            return fetch(baseUrl + url, {
+                    method: method,
+                    mode: "cors",
+                    body: form
+                })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(response.statusText);
+                    }
+                    return response.json()
+                })
+                .then(res => {
+                    if (res.status === false) {
+                        let msg = res.message + "</br>";
+                        if (res.dataErrors) {
+                            for (const [key, value] of Object.entries(res.error)) {
+                                msg += `${key}  :  ${value}</br>`;
+                            }
+                        }
+                        throw new Error(msg);
+                    }
+                    return res.data ? res.data : res;
+                })
+                .catch((error) => {
+                    throw new Error(error);
+                });
+        }
     </script>
 
 </head>

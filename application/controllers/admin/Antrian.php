@@ -15,20 +15,11 @@ class Antrian extends Admin_Controller
     {
 
         $this->_cekSession();
-        $data = [
-            'id' => $this->session->userdata('id_loket')
-        ];
-        $this->data['s_loket'] = $this->antrian_m->getLoketId($data)->row_array();
+        $id = $this->session->userdata('id_loket');
 
-        $where = [
-            'counter' =>  $this->data['s_loket']['client']
-        ];
-        $this->data['s_antrian'] = $this->antrian_m->getAntrianClient($where)->row_array();
 
-        $this->data['antrian_next'] = $this->antrian_m->getNext()->row_array();
+        $this->data['id'] = $id;
         $this->data['list_antrian'] = $this->antrian_m->getAntrian()->result_array();
-
-
         $this->template->load('admin', 'antrian/petugas', $this->data);
     }
 

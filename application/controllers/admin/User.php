@@ -19,6 +19,14 @@ class User extends Admin_Controller
 		$this->data['log'] = $this->log_model->getId()->result_array();
 		$this->template->load('admin', 'user/log/test', $this->data);
 	}
+	function setting()
+	{
+		foreach ($_POST as $key => $value) {
+			$where['name'] = htmlspecialchars($key);
+			$data['title'] = htmlspecialchars($value);
+		}
+		$this->setting_m->update($where, $data);
+	}
 	function profile()
 	{
 		$this->load->library('form_validation');
@@ -257,7 +265,9 @@ class User extends Admin_Controller
 		}
 	}
 	function blocked()
-	{ }
+	{
+	}
 	function log()
-	{ }
+	{
+	}
 }

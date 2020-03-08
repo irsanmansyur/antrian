@@ -88,19 +88,18 @@ class Antrian_m extends CI_Model
         $this->db->order_by('id', 'asc');
         return $this->db->get($this->table);
     }
-    function getAllLoked()
+    function getLoked($id = null)
     {
-        $loket = $this->db->get('client_antrian');
+        $this->db->select("client_antrian.*,data_antrian.status AS statusAntrian");
+        $this->db->from("client_antrian");
+        $this->db->join("data_antrian", "client_antrian.client=data_antrian.id");
+        if ($id) {
+            $this->db->where('client_antrian.id', $id);
+        }
+        $loket = $this->db->get();
         return $loket;
     }
-    function getLoked($active = 1)
-    {
-        $loket = $this->db->get_where('client_antrian', [
-            'status' => $active
-        ]);
 
-        return $loket;
-    }
 
     function getAntrianAwal()
     {
@@ -136,5 +135,13 @@ class Antrian_m extends CI_Model
         $this->db->select("count(*) as jumlah_loket");
         $this->db->from('client_antrian');
         return $this->db->get();
+    }
+    function updateAntrian($where, $data)
+    {
+        foreach ($data as $key => $value) {
+            $this->db->set($key, $value);
+        }
+        $this->db->where($where);
+        $this->db->update($this->table);
     }
 }

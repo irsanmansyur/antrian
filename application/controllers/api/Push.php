@@ -14,18 +14,21 @@ class Push extends CI_Controller
 
     function PlayFinish()
     {
-        $id = $this->input->post('id');
-        $this->db->where([
-            'id' => $id
-        ]);
-        $this->db->update("data_antrian", [
-            'status' => 1
-        ]);
         $pusher = $this->ci_pusher->get();
         $data['playing'] = false;
         $pusher->trigger('my-channel', 'my-event', $data);
         $this->response([
             "message" => "Playing Stopped",
+            "status" => true
+        ]);
+    }
+    function playing()
+    {
+        $pusher = $this->ci_pusher->get();
+        $data['playing'] = true;
+        $pusher->trigger('my-channel', 'my-event', $data);
+        $this->response([
+            "message" => "Playing",
             "status" => true
         ]);
     }
