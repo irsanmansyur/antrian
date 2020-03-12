@@ -1,11 +1,10 @@
 Vue.component("next-loket", {
 	data: () => {
 		return {
-			next: "",
 			loading: false
 		};
 	},
-	props: { antrian: Object },
+	props: ["antrian"],
 	template: `  
         <div v-if="antrian.id==null">
             <h1><span>Sudah tidak ada Antrian </span></h1>
