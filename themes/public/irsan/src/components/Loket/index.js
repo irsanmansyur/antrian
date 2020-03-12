@@ -1,5 +1,5 @@
 Vue.component("card-loket", {
-	props: { loket: "loket" },
+	props: ["loket"],
 	template: `
             <div class="card card-loket">
                 <div class="card-body text-center">
