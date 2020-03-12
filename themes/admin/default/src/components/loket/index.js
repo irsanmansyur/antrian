@@ -44,7 +44,11 @@ Vue.component("loket-component", {
 			vLoket.playing = true;
 			try {
 				let url = "api/antrian/memanggil/" + idAntr + "/" + idLoket;
+				console.log(baseUrl + url);
+
 				let resp = await getData(url);
+				console.log(resp);
+
 				vLoket.playing = false;
 				setDataGlobal(resp);
 			} catch (error) {
