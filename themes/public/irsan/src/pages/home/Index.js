@@ -1,15 +1,16 @@
 let dataGlobal = null;
 const home = new Vue({
 	el: "#home-page",
-	data: { data: "" },
+	data: { loket: Object, next: Object },
 	mounted() {
 		setDataGlobal();
 	}
 });
 function setDataGlobal() {
 	getData("api/antrian/getdataloket").then(res => {
-		dataGlobal = res;
-		home.data = dataGlobal;
+		let antri = res.nextAntri;
+		home.next = antri;
+		home.loket = res.loket;
 		let arr = res.loket;
 		let ab = arr.filter(
 			({ status, statusAntrian }) => status == 1 && statusAntrian == 2

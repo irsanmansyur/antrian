@@ -1,21 +1,25 @@
 let loading = false;
 Vue.component("loket-component", {
+	data: function() {
+		return {
+			loading: loading
+		};
+	},
 	props: { loket: "loket", next: "next" },
 	template: `
-        <div style="padding-top:20px;padding-bottom:20px;">
-            <h1>Loket {{ loket.id }}</h1>
+		<div>
+			<h1>Loket {{ loket.id }}</h1>
             <statusLoket-component v-bind:statusL="loket.status" v-bind:statusA="loket.statusAntrian" v-bind:client="loket.client"></statusLoket-component>
-
             
-            <div class="container">
-                <a v-if="loket.status==2&&next!='kosong'" class="btn btn-primary" @click="memanggilNext(next.id,loket.id)">Panggil Selanjtnya</a>
-                <panggilUlang-component v-if="loket.status==1&&loket.statusAntrian==2" v-bind:idClient="loket.client" v-bind:idLoket="loket.id"></panggilUlang-component>
-                <a v-if="next!='kosong'&&loket.status==1&&loket.statusAntrian==2" class="btn btn-danger">Lewati</a>
-                <a v-if="loket.status==1&&loket.statusAntrian==1" class="btn btn-success" @click="selesai(loket.client,loket.id)">Selesai</a>
-                <a v-if="loket.status==1&&loket.statusAntrian==1" class="btn btn-success" @click="selesai(loket.client,loket.id)">Selesai</a>
+			<div class="container">
+				<loading-component v-if="this.$parent.playing"></loading-component>
+				<a v-else-if="loket.status==2&&next.id!=null&&!this.$parent.playing" class="btn btn-primary" @click="memanggilNext(next.id,loket.id)">Panggil Selanjutnya</a>
+				<panggilUlang-component v-if="loket.status==1&&loket.statusAntrian==2&&!this.$parent.playing" :playing="this.$parent.playing" v-bind:idClient="loket.client" v-bind:idLoket="loket.id"></panggilUlang-component>
+                <a v-if="next.id!=null&&loket.status==1&&loket.statusAntrian==2&&!this.$parent.playing" class="btn btn-danger" @click="lewati(loket.client,loket.id)">Lewati</a>
+                <a v-if="loket.status==1&&loket.statusAntrian==1&&!this.$parent.playing" class="btn btn-success" @click="selesai(loket.client,loket.id)">Selesai</a>
             </div>
-            <div class="loket-close" v-if="loket.status!=0">
-                <closeLoket-component v-bind:load="this.$parent.loading" v-bind:idLoket="loket.id"></closeLoket-component>
+            <div class="loket-status">
+                <closeLoket-component v-bind:lId="loket.id" :next="next" :aStatus="loket.statusAntrian" :lStatus="loket.status"></closeLoket-component>
             </div>
         </div>`,
 	methods: {
@@ -24,60 +28,81 @@ Vue.component("loket-component", {
 		},
 
 		selesai: async (client, idLoket) => {
-			if (!loading) {
-				try {
-					loket.state.loading = true;
-					let url = "api/antrian/selesai/" + client + "/" + idLoket;
-					let resp = await getData(url);
-					setDataGlobal(resp);
-				} catch (error) {
-					console.error(error);
-				}
+			vLoket.playing = true;
+			try {
+				let url = "api/antrian/selesai/" + client + "/" + idLoket;
+
+				let resp = await getData(url);
+				vLoket.playing = false;
+				setDataGlobal(resp);
+			} catch (error) {
+				vLoket.playing = false;
+				console.error(error);
 			}
 		},
-		memanggilNext: async (idAntr, idLoket) => {
-			if (!loading) {
-				try {
-					loket.state.loading = true;
-					let url = "api/antrian/memanggil/" + idAntr + "/" + idLoket;
-					let resp = await getData(url);
-					setDataGlobal(resp);
-					console.log(dataGlobal);
-				} catch (error) {
-					console.error(error);
-				}
+		async memanggilNext(idAntr, idLoket) {
+			vLoket.playing = true;
+			try {
+				let url = "api/antrian/memanggil/" + idAntr + "/" + idLoket;
+				let resp = await getData(url);
+				vLoket.playing = false;
+				setDataGlobal(resp);
+			} catch (error) {
+				console.error(error);
+				vLoket.playing = false;
+			}
+		},
+		async lewati(an, loket) {
+			vLoket.playing = true;
+			console.log(an, loket);
+
+			try {
+				let url = "api/antrian/lewati/" + an + "/" + loket;
+				let resp = await getData(url);
+
+				vLoket.playing = false;
+				setDataGlobal(resp);
+			} catch (error) {
+				console.error(error);
+				vLoket.playing = false;
 			}
 		}
 	}
 });
 Vue.component("panggilUlang-component", {
-	props: ["idClient", "idLoket"],
+	data: function() {
+		return { loading: false };
+	},
+	props: ["idClient", "idLoket", "playing"],
 	template: `
-        <div>
-            <a class="btn btn-warning" v-on:click="callAgain">Panggil Ulang</a>
-            <v-btn class="btn btn-success" color="primary" dark v-on:click="success(idClient,idLoket)">Accept
-                <v-icon dark right>mdi-checkbox-marked-circle</v-icon>
-            </v-btn>
-        </div>`,
+			<div >
+				<button v-on:click="callAgain" class="btn btn-warning">Panggil Ulang</button>
+				<button v-on:click="success(idClient,idLoket,playing)" class="btn btn-success"><i class="material-icons">
+				check_box
+				</i> Success</button>
+			</div>`,
 	methods: {
-		callAgain: async () => {
-			if (!loading) {
-				try {
-					await getData("api/push/playing");
-				} catch (error) {
-					console.error("Memanggil error", error);
-				}
+		async callAgain() {
+			vLoket.playing = true;
+			try {
+				await getData("api/push/playing");
+				this.loading = loading;
+			} catch (error) {
+				this.loading = loading;
+				console.error("Memanggil error", error);
 			}
 		},
-		success: async (id, idL) => {
+		async success(id, idL, loading) {
+			vLoket.playing = true;
 			try {
 				let resp = await getData(
 					"api/antrian/antrianStagged/" + id + "/" + idL
 				);
-				dataGlobal = resp;
-				dataGlobal.loket = resp.loket[0];
+				setDataGlobal(resp);
+				vLoket.playing = false;
 			} catch (error) {
 				console.error("Memanggil error", error);
+				vLoket.playing = false;
 			}
 		}
 	}
@@ -109,16 +134,34 @@ Vue.component("statusLoket-component", {
     `
 });
 Vue.component("closeLoket-component", {
-	props: { load: "load", idL: "idLoket" },
+	data: function() {
+		return {
+			loading: false
+		};
+	},
+	props: ["lId", "lStatus", "aStatus", "next"],
 	template: `
-        <v-btn v-bind:loading="load" color="'error'" @click="closeIt(idL)" large>Tutup</v-btn>`,
+		<button v-if="loading" class="btn btn-warning"><i class="fa fa-circle-o-notch fa-spin"></i>Loading</button>
+		<button v-else-if="(lStatus==2&&next.id==null)||(lStatus==1&&aStatus==1)" class="btn btn-danger" @click="closeIt(lId)">Tutup</button> 
+		<button v-else-if="lStatus==0" class="btn btn-primary" @click="openIt(lId)">Open</button>`,
 	methods: {
-		closeIt: async idL => {
-			loket.loading = true;
+		async closeIt(idL) {
+			this.loading = true;
 			try {
 				let url = "api/antrian/loketclose/" + idL;
 				let resp = await getData(url);
-				loket.loading = false;
+				this.loading = false;
+				setDataGlobal(resp);
+			} catch (error) {
+				console.error(error);
+			}
+		},
+		async openIt(idL) {
+			this.loading = true;
+			try {
+				let url = "api/antrian/loketopen/" + idL;
+				let resp = await getData(url);
+				this.loading = false;
 				setDataGlobal(resp);
 			} catch (error) {
 				console.error(error);
@@ -145,9 +188,11 @@ Vue.component("statusAntrian-component", {
      </div>
     `
 });
+Vue.component("loading-component", {
+	template: `<button class="btn btn-warning btn-loading"><i class="fa fa-circle-o-notch fa-spin"></i>Loading..</button>`
+});
 function setDataGlobal(response) {
-	let next = response.nextAntry;
-	let lkt = response.loket[0];
-	dataGlobal.loket = lkt;
-	dataGlobal.nextAntri = next;
+	let { loket, nextAntri } = response;
+	vLoket.loket = loket[0];
+	vLoket.next = nextAntri;
 }

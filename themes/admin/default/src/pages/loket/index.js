@@ -1,8 +1,16 @@
-let dataGlobal = {};
-const loket = new Vue({
+let loket = {};
+const vLoket = new Vue({
 	el: "#loket-page",
 	state: {},
-	data: { data: "", state: { ok: "ok" }, loading: false },
+	data: { loket: Object, next: Object, playing: false },
+	mounted() {
+		setDataGlobal();
+	}
+});
+
+const vAntrian = new Vue({
+	el: "#antrian-page",
+	data: { antrians: null, no: 1 },
 	mounted() {
 		setDataGlobal();
 	}
@@ -10,9 +18,11 @@ const loket = new Vue({
 
 function setDataGlobal() {
 	getData("api/antrian/getdataloket/" + idLoket).then(res => {
-		dataGlobal = res;
-		dataGlobal.loket = res.loket[0];
-		loket.data = dataGlobal;
+		let { loket, nextAntri, antrians } = res;
+		vLoket.loket = loket[0];
+		loket = loket[0];
+		vLoket.next = nextAntri;
+		vAntrian.antrians = antrians;
 	});
 }
 
@@ -22,9 +32,8 @@ var pusher = new Pusher("f6b62ae006c0b51482f4", {
 });
 var channel = pusher.subscribe("my-channel");
 channel.bind("my-event", async function(data) {
-	if (data.playing) loading = true;
-	else loading = false;
-	console.log(loading);
+	if (data.playing) vLoket.playing = true;
+	else vLoket.playing = false;
 	if (data.antrianChange) {
 		setDataGlobal();
 	}

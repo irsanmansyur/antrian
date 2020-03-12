@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AACA,AAAA,WAAW,CAAC;EACX,UAAU,EAAE,GAAG,CAAC,KAAK,CAFZ,OAAO;EAGhB,UAAU,EAAE,OAAO;CACnB;;AACD,AAAA,YAAY,CAAC;EACZ,MAAM,EAAE,IAAI;CACZ",
+    "sources": [
+        "petugas.scss"
+    ],
+    "names": [],
+    "file": "petugas.css"
+}

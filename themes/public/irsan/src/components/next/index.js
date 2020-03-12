@@ -1,17 +1,22 @@
-Vue.component("next-component", {
-	props: ["antrian", "id_antri"],
-	template: `
-        <div v-if="antrian=='kosong'">
+Vue.component("next-loket", {
+	data: () => {
+		return {
+			next: "",
+			loading: false
+		};
+	},
+	props: { antrian: Object },
+	template: `  
+        <div v-if="antrian.id==null">
             <h1><span>Sudah tidak ada Antrian </span></h1>
             <button class="btn btn-light btn-lg" type="button"><span class="fa fa-university">&nbsp;</span>Kosong.!</button>
         </div>
-        <div v-else>
-            <h1 class="display-4 mb-4"><span>Siap siap  </span><b>Nomor Antrian {{ id_antri }} </b> </h1>
+        <div v-else="">
+            <h1 class="display-4 mb-4"><span>Siap siap  </span><b>Nomor Antrian {{ antrian.id }} </b> </h1>
             <button class="btn btn-light btn-lg" type="button"><span class="fa fa-university">&nbsp;</span>Di LOKET .?</button>
             <div class="container mt-3">
                 <a disable class="btn btn-warning">Waiting..!</a>
             </div>
-        </div>
-    `
+        </div>`
 });
-console.log("component Next");
+console.log("component Text nest");

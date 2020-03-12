@@ -2,20 +2,17 @@
 <html lang="en">
 
 <head>
+    <script src="https://js.pusher.com/5.1/pusher.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
     <link href="<?= base_url() ?>assets/vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" />
     <!-- js -->
-
-    <script src="<?= base_url() ?>assets/vendor/jquery-3-3-1/jquery.min.js"></script>
-    <script src="<?= base_url() ?>assets/vendor/jquery-3-3-1/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="<?= base_url() ?>assets/vendor/bootstrap-4.1/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-
     <style>
         .bg-utama {
             background: rgb(47, 145, 173);
             background: linear-gradient(51deg, rgba(47, 145, 173, 1) 1%, rgba(18, 71, 193, 1) 64%, rgba(10, 176, 209, 1) 100%);
             min-width: 100%;
             min-height: 100vh;
+            box-sizing: border-box;
             padding: 25px;
         }
 
@@ -34,6 +31,9 @@
         }
 
         .next-antri {
+            margin-top: 15px;
+            margin-left: 15px;
+            margin-right: 15px;
             background: linear-gradient(90deg, #00d2ff 0%, #3a47d5 100%);
         }
 
@@ -48,17 +48,15 @@
 <body>
     <!-- isi content -->
     <div class="bg-utama" id="home-page">
-        <h1 class="judul display-5">
+        <h1 class="judul display-5 mt-0">
             <marquee behavior="scroll" scrollamount="9" direction="left">Selamat Datang di Sistem Antrian!</marquee>
         </h1>
-        <div class="card-deck mt-5" id="loket">
-            <card-loket v-bind:disabled="data" v-for="loket in data.loket" v-bind:loket="loket"></card-loket>
+        <div class="card-deck mt-3 mb-1" id="loket">
+            <card-loket v-for="loket in loket" v-bind:loket="loket"></card-loket>
         </div>
-        <div class="row">
-            <div class="col-md text-center mt-5">
-                <div class="jumbotron next-antri" next="0" style="padding-top:20px;padding-bottom:20px;">
-                    <next-component v-bind:disabled="data" v-bind:id_antri="data.nextAntri.id" v-bind:antrian="data.nextAntri"></next-component>
-                </div>
+        <div class="card-deck mt-3 mb-1">
+            <div class="col-md text-center p-3 next-antri">
+                <next-loket v-bind:antrian="next" v-bind:artist="'irsan'"></next-loket>
             </div>
         </div>
 
@@ -124,10 +122,8 @@
             document.querySelector("head").appendChild(link);
             return "Added";
         };
-        loadFileJs("https://js.pusher.com/5.1/pusher.min.js", "dd");
         // loadFileJs("assets/js/notification/index.js");
-        loadFileJs("src/components/Errors/index.js");
-        loadFileJs("src/components/Loket/index.js");
+        loadFileJs("src/components/loket/index.js");
         loadFileJs("src/components/next/index.js");
 
 

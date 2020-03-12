@@ -2,7 +2,6 @@
     <!-- css vue , component dan animate -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/animate.css@3.5.1" rel="stylesheet" />
 
     <!-- pusher js -->
@@ -10,7 +9,6 @@
 
     <!-- vue component dan Vue -->
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
 
     <meta charset="utf-8" />
     <link rel="apple-touch-icon" sizes="76x76" href="<?= $thema_folder; ?>assets/img/apple-icon.png">
