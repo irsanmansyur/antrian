@@ -55,7 +55,7 @@ class Antrian extends CI_Controller
             $this->antrian_m->updateLoket(['id' => $idLoket], ['client' => $id, "status" => 1]);
         }
         $pusher = $this->ci_pusher->get();
-        $data['message'] = 'notif';
+        $data['antrianChange'] = true;
         $data['playing'] = true;
         $pusher->trigger('my-channel', 'my-event', $data);
         $this->getDataLoket($idLoket);
